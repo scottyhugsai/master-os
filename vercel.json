@@ -1,9 +1,5 @@
 {
   "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "framework": "nextjs",
-  "root": ".",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "@NEXT_PUBLIC_API_URL"
-  }
+  "framework": "nextjs"
 }
