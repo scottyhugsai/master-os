@@ -1,14 +1,15 @@
 /**
  * Projects Store - Zustand
+ * Connected to FastAPI backend at localhost:8000
  */
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { RoofingProject } from '@/types';
+import { projectsApi, Project, ProjectInput, ApiError } from '@/lib/api';
 
 interface ProjectsStore {
-  projects: RoofingProject[];
-  currentProject: RoofingProject | null;
+  projects: Project[];
+  currentProject: Project | null;
   isLoading: boolean;
   error?: string;
   filters: {
@@ -18,12 +19,12 @@ interface ProjectsStore {
 
   // Actions
   fetchProjects: () => Promise<void>;
-  fetchProjectById: (id: string) => Promise<void>;
-  createProject: (project: Omit<RoofingProject, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
-  updateProject: (id: string, project: Partial<RoofingProject>) => Promise<void>;
-  deleteProject: (id: string) => Promise<void>;
-  setProjects: (projects: RoofingProject[]) => void;
-  setCurrentProject: (project: RoofingProject | null) => void;
+  fetchProjectById: (id: number) => Promise<void>;
+  createProject: (project: ProjectInput) => Promise<void>;
+  updateProject: (id: number, project: Partial<ProjectInput>) => Promise<void>;
+  deleteProject: (id: number) => Promise<void>;
+  setProjects: (projects: Project[]) => void;
+  setCurrentProject: (project: Project | null) => void;
   setFilters: (filters: Partial<ProjectsStore['filters']>) => void;
   clearFilters: () => void;
   setLoading: (loading: boolean) => void;
@@ -42,28 +43,26 @@ export const useProjectsStore = create<ProjectsStore>()(
       fetchProjects: async () => {
         set({ isLoading: true, error: undefined });
         try {
-          // TODO: Call API endpoint
-          // const response = await fetch('/api/projects');
-          // const projects = await response.json();
-          set({ projects: [], isLoading: false });
+          const projects = await projectsApi.list();
+          set({ projects, isLoading: false });
         } catch (error) {
+          const message = error instanceof ApiError ? error.message : 'Failed to fetch projects';
           set({
-            error: error instanceof Error ? error.message : 'Failed to fetch projects',
+            error: message,
             isLoading: false,
           });
         }
       },
 
-      fetchProjectById: async (id: string) => {
+      fetchProjectById: async (id: number) => {
         set({ isLoading: true, error: undefined });
         try {
-          // TODO: Call API endpoint
-          // const response = await fetch(`/api/projects/${id}`);
-          // const project = await response.json();
-          set({ currentProject: null, isLoading: false });
+          const currentProject = await projectsApi.get(id);
+          set({ currentProject, isLoading: false });
         } catch (error) {
+          const message = error instanceof ApiError ? error.message : 'Failed to fetch project';
           set({
-            error: error instanceof Error ? error.message : 'Failed to fetch project',
+            error: message,
             isLoading: false,
           });
         }
@@ -72,51 +71,44 @@ export const useProjectsStore = create<ProjectsStore>()(
       createProject: async (project) => {
         set({ isLoading: true, error: undefined });
         try {
-          // TODO: Call API endpoint
-          // const response = await fetch('/api/projects', {
-          //   method: 'POST',
-          //   body: JSON.stringify(project),
-          // });
-          // const newProject = await response.json();
+          const newProject = await projectsApi.create(project);
           const { projects } = get();
-          set({ projects, isLoading: false });
+          set({ projects: [...projects, newProject], isLoading: false });
         } catch (error) {
+          const message = error instanceof ApiError ? error.message : 'Failed to create project';
           set({
-            error: error instanceof Error ? error.message : 'Failed to create project',
+            error: message,
             isLoading: false,
           });
+          throw error;
         }
       },
 
-      updateProject: async (id: string, updates: Partial<RoofingProject>) => {
+      updateProject: async (id: number, updates: Partial<ProjectInput>) => {
         set({ isLoading: true, error: undefined });
         try {
-          // TODO: Call API endpoint
-          // const response = await fetch(`/api/projects/${id}`, {
-          //   method: 'PATCH',
-          //   body: JSON.stringify(updates),
-          // });
+          const updated = await projectsApi.update(id, updates);
           const { projects, currentProject } = get();
-          const updated = projects.map((p) => (p.id === id ? { ...p, ...updates } : p));
+          const newProjects = projects.map((p) => (p.id === id ? updated : p));
           set({
-            projects: updated,
-            currentProject:
-              currentProject?.id === id ? { ...currentProject, ...updates } : currentProject,
+            projects: newProjects,
+            currentProject: currentProject?.id === id ? updated : currentProject,
             isLoading: false,
           });
         } catch (error) {
+          const message = error instanceof ApiError ? error.message : 'Failed to update project';
           set({
-            error: error instanceof Error ? error.message : 'Failed to update project',
+            error: message,
             isLoading: false,
           });
+          throw error;
         }
       },
 
-      deleteProject: async (id: string) => {
+      deleteProject: async (id: number) => {
         set({ isLoading: true, error: undefined });
         try {
-          // TODO: Call API endpoint
-          // await fetch(`/api/projects/${id}`, { method: 'DELETE' });
+          await projectsApi.delete(id);
           const { projects } = get();
           set({
             projects: projects.filter((p) => p.id !== id),
@@ -124,10 +116,12 @@ export const useProjectsStore = create<ProjectsStore>()(
             isLoading: false,
           });
         } catch (error) {
+          const message = error instanceof ApiError ? error.message : 'Failed to delete project';
           set({
-            error: error instanceof Error ? error.message : 'Failed to delete project',
+            error: message,
             isLoading: false,
           });
+          throw error;
         }
       },
 

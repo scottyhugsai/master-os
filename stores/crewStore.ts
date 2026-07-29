@@ -1,30 +1,31 @@
 /**
  * Crew Store - Zustand
+ * Connected to FastAPI backend at localhost:8000
+ * Uses /crew endpoint for crew members tied to projects
  */
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { CrewMember } from '@/types';
+import { crewApi, Crew, CrewInput, ApiError } from '@/lib/api';
 
 interface CrewStore {
-  crew: CrewMember[];
-  currentMember: CrewMember | null;
+  crew: Crew[];
+  currentMember: Crew | null;
   isLoading: boolean;
   error?: string;
   filters: {
-    status?: string;
-    expertise?: string[];
+    role?: string;
     searchTerm?: string;
   };
 
   // Actions
-  fetchCrew: () => Promise<void>;
-  fetchCrewMemberById: (id: string) => Promise<void>;
-  createCrewMember: (member: Omit<CrewMember, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
-  updateCrewMember: (id: string, member: Partial<CrewMember>) => Promise<void>;
-  deleteCrewMember: (id: string) => Promise<void>;
-  setCrew: (crew: CrewMember[]) => void;
-  setCurrentMember: (member: CrewMember | null) => void;
+  fetchCrew: (projectId?: number) => Promise<void>;
+  fetchCrewMemberById: (id: number) => Promise<void>;
+  createCrewMember: (member: CrewInput) => Promise<void>;
+  updateCrewMember: (id: number, member: Partial<CrewInput>) => Promise<void>;
+  deleteCrewMember: (id: number) => Promise<void>;
+  setCrew: (crew: Crew[]) => void;
+  setCurrentMember: (member: Crew | null) => void;
   setFilters: (filters: Partial<CrewStore['filters']>) => void;
   clearFilters: () => void;
   setLoading: (loading: boolean) => void;
@@ -40,31 +41,29 @@ export const useCrewStore = create<CrewStore>()(
       error: undefined,
       filters: {},
 
-      fetchCrew: async () => {
+      fetchCrew: async (projectId?: number) => {
         set({ isLoading: true, error: undefined });
         try {
-          // TODO: Call API endpoint
-          // const response = await fetch('/api/crew');
-          // const crew = await response.json();
-          set({ crew: [], isLoading: false });
+          const crew = await crewApi.list(projectId);
+          set({ crew, isLoading: false });
         } catch (error) {
+          const message = error instanceof ApiError ? error.message : 'Failed to fetch crew';
           set({
-            error: error instanceof Error ? error.message : 'Failed to fetch crew',
+            error: message,
             isLoading: false,
           });
         }
       },
 
-      fetchCrewMemberById: async (id: string) => {
+      fetchCrewMemberById: async (id: number) => {
         set({ isLoading: true, error: undefined });
         try {
-          // TODO: Call API endpoint
-          // const response = await fetch(`/api/crew/${id}`);
-          // const member = await response.json();
-          set({ currentMember: null, isLoading: false });
+          const currentMember = await crewApi.get(id);
+          set({ currentMember, isLoading: false });
         } catch (error) {
+          const message = error instanceof ApiError ? error.message : 'Failed to fetch crew member';
           set({
-            error: error instanceof Error ? error.message : 'Failed to fetch crew member',
+            error: message,
             isLoading: false,
           });
         }
@@ -73,50 +72,44 @@ export const useCrewStore = create<CrewStore>()(
       createCrewMember: async (member) => {
         set({ isLoading: true, error: undefined });
         try {
-          // TODO: Call API endpoint
-          // const response = await fetch('/api/crew', {
-          //   method: 'POST',
-          //   body: JSON.stringify(member),
-          // });
-          // const newMember = await response.json();
+          const newMember = await crewApi.create(member);
           const { crew } = get();
-          set({ crew, isLoading: false });
+          set({ crew: [...crew, newMember], isLoading: false });
         } catch (error) {
+          const message = error instanceof ApiError ? error.message : 'Failed to create crew member';
           set({
-            error: error instanceof Error ? error.message : 'Failed to create crew member',
+            error: message,
             isLoading: false,
           });
+          throw error;
         }
       },
 
-      updateCrewMember: async (id: string, updates: Partial<CrewMember>) => {
+      updateCrewMember: async (id: number, updates: Partial<CrewInput>) => {
         set({ isLoading: true, error: undefined });
         try {
-          // TODO: Call API endpoint
-          // const response = await fetch(`/api/crew/${id}`, {
-          //   method: 'PATCH',
-          //   body: JSON.stringify(updates),
-          // });
+          const updated = await crewApi.update(id, updates);
           const { crew, currentMember } = get();
-          const updated = crew.map((m) => (m.id === id ? { ...m, ...updates } : m));
+          const newCrew = crew.map((m) => (m.id === id ? updated : m));
           set({
-            crew: updated,
-            currentMember: currentMember?.id === id ? { ...currentMember, ...updates } : currentMember,
+            crew: newCrew,
+            currentMember: currentMember?.id === id ? updated : currentMember,
             isLoading: false,
           });
         } catch (error) {
+          const message = error instanceof ApiError ? error.message : 'Failed to update crew member';
           set({
-            error: error instanceof Error ? error.message : 'Failed to update crew member',
+            error: message,
             isLoading: false,
           });
+          throw error;
         }
       },
 
-      deleteCrewMember: async (id: string) => {
+      deleteCrewMember: async (id: number) => {
         set({ isLoading: true, error: undefined });
         try {
-          // TODO: Call API endpoint
-          // await fetch(`/api/crew/${id}`, { method: 'DELETE' });
+          await crewApi.delete(id);
           const { crew } = get();
           set({
             crew: crew.filter((m) => m.id !== id),
@@ -124,10 +117,12 @@ export const useCrewStore = create<CrewStore>()(
             isLoading: false,
           });
         } catch (error) {
+          const message = error instanceof ApiError ? error.message : 'Failed to delete crew member';
           set({
-            error: error instanceof Error ? error.message : 'Failed to delete crew member',
+            error: message,
             isLoading: false,
           });
+          throw error;
         }
       },
 

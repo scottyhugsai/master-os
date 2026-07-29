@@ -1,264 +1,204 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { RootLayout } from '@/components/Layout';
-import { Card, Badge } from '@/components/ui';
-import { designTokens } from '@/config/designTokens';
-import { useProjectsStore } from '@/stores/projectsStore';
-import { useCrewStore } from '@/stores/crewStore';
+import { useState, useEffect } from 'react';
 
-interface StatCard {
-  label: string;
-  value: string | number;
-  icon: string;
-  color: string;
-  trend?: string;
-}
+export default function Dashboard() {
+  const [stats, setStats] = useState({
+    totalProjects: 0,
+    activeProjects: 0,
+    completedProjects: 0,
+    totalRevenue: 0,
+    pendingQuotes: 0,
+    totalCrew: 0,
+  });
 
-export default function DashboardPage() {
-  const { projects, fetchProjects } = useProjectsStore();
-  const { crew, fetchCrew } = useCrewStore();
+  const [recentProjects, setRecentProjects] = useState<any[]>([]);
 
   useEffect(() => {
-    fetchProjects();
-    fetchCrew();
-  }, [fetchProjects, fetchCrew]);
+    fetchStats();
+    fetchRecentProjects();
+  }, []);
 
-  const statCards: StatCard[] = [
+  const fetchStats = async () => {
+    try {
+      const [projectsRes, quotesRes, crewRes] = await Promise.all([
+        fetch('http://localhost:8000/api/projects'),
+        fetch('http://localhost:8000/api/quotes'),
+        fetch('http://localhost:8000/api/crew'),
+      ]);
+
+      const projects = await projectsRes.json();
+      const quotes = await quotesRes.json();
+      const crew = await crewRes.json();
+
+      const activeProjects = projects.filter((p: any) => p.status === 'in-progress').length;
+      const completedProjects = projects.filter((p: any) => p.status === 'completed').length;
+      const totalRevenue = projects.reduce((sum: number, p: any) => sum + (p.budget || 0), 0);
+      const pendingQuotes = quotes.filter((q: any) => q.status === 'draft').length;
+
+      setStats({
+        totalProjects: projects.length,
+        activeProjects,
+        completedProjects,
+        totalRevenue,
+        pendingQuotes,
+        totalCrew: crew.length,
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
+
+  const fetchRecentProjects = async () => {
+    try {
+      const res = await fetch('http://localhost:8000/api/projects');
+      const data = await res.json();
+      setRecentProjects(data.slice(0, 5));
+    } catch (error) {
+      console.error('Error fetching recent projects:', error);
+    }
+  };
+
+  const statCards = [
     {
       label: 'Total Projects',
-      value: projects.length,
-      icon: '🏗️',
-      color: designTokens.colors.primary,
-      trend: '+5 this month',
+      value: stats.totalProjects,
+      color: '#00d9ff',
+      icon: '📊',
     },
     {
       label: 'Active Projects',
-      value: projects.filter((p) => p.status === 'in-progress').length,
+      value: stats.activeProjects,
+      color: '#a78bfa',
       icon: '⚙️',
-      color: designTokens.colors.secondary,
-      trend: 'In progress',
     },
     {
-      label: 'Team Members',
-      value: crew.length,
-      icon: '👥',
-      color: designTokens.colors.accent,
-      trend: 'Available',
+      label: 'Completed',
+      value: stats.completedProjects,
+      color: '#10b981',
+      icon: '✓',
     },
     {
       label: 'Total Revenue',
-      value: `$${(Math.random() * 50000).toFixed(0)}`,
+      value: `$${stats.totalRevenue.toLocaleString()}`,
+      color: '#f59e0b',
       icon: '💰',
-      color: designTokens.colors.success,
-      trend: 'YTD',
+    },
+    {
+      label: 'Pending Quotes',
+      value: stats.pendingQuotes,
+      color: '#ef4444',
+      icon: '📝',
+    },
+    {
+      label: 'Crew Members',
+      value: stats.totalCrew,
+      color: '#06b6d4',
+      icon: '👥',
     },
   ];
 
-  return (
-    <RootLayout title="Dashboard" showSidebar={true}>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: designTokens.spacing.lg,
-          marginBottom: designTokens.spacing['2xl'],
-        }}
-      >
-        {statCards.map((stat) => (
-          <Card
-            key={stat.label}
-            style={{
-              padding: designTokens.spacing.lg,
-            }}
-            hover
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: designTokens.spacing.md }}>
-              <div
-                style={{
-                  fontSize: designTokens.fontSize['3xl'],
-                  width: '60px',
-                  height: '60px',
-                  borderRadius: designTokens.borderRadius.lg,
-                  backgroundColor: `${stat.color}20`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {stat.icon}
-              </div>
-              <div>
-                <p
-                  style={{
-                    fontSize: designTokens.fontSize.sm,
-                    color: designTokens.colors.neutral[500],
-                    margin: 0,
-                    marginBottom: designTokens.spacing.xs,
-                  }}
-                >
-                  {stat.label}
-                </p>
-                <p
-                  style={{
-                    fontSize: designTokens.fontSize['2xl'],
-                    fontWeight: 700,
-                    color: designTokens.colors.neutral[900],
-                    margin: 0,
-                  }}
-                >
-                  {stat.value}
-                </p>
-                {stat.trend && (
-                  <Badge variant="info" style={{ marginTop: designTokens.spacing.sm }}>
-                    {stat.trend}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
+  const statusColors: Record<string, string> = {
+    quoted: '#cbd5e1',
+    approved: '#00d9ff',
+    'in-progress': '#a78bfa',
+    completed: '#10b981',
+  };
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: designTokens.spacing.lg,
-        }}
-      >
-        {/* Recent Projects */}
-        <Card
-          style={{
-            padding: designTokens.spacing.lg,
-          }}
-        >
-          <h2
-            style={{
-              fontSize: designTokens.fontSize.xl,
-              fontWeight: 700,
-              margin: 0,
-              marginBottom: designTokens.spacing.lg,
-            }}
-          >
-            Recent Projects
-          </h2>
-          {projects.length === 0 ? (
-            <p
+  return (
+    <main style={{ minHeight: '100vh', padding: '2rem 1rem' }}>
+      <div style={{ maxWidth: '80rem', margin: '0 auto' }}>
+        <div style={{ marginBottom: '3rem' }}>
+          <h1 style={{ color: '#f1f5f9', marginBottom: '0.5rem', fontSize: '2rem' }}>Dashboard</h1>
+          <p style={{ color: '#94a3b8' }}>Welcome back. Here's your business overview.</p>
+        </div>
+
+        {/* KPI Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+          {statCards.map((card, idx) => (
+            <div
+              key={idx}
               style={{
-                color: designTokens.colors.neutral[500],
-                textAlign: 'center',
-                padding: designTokens.spacing.lg,
+                background: 'rgba(26, 31, 58, 0.8)',
+                border: `1px solid rgba(${card.color === '#00d9ff' ? '0, 217, 255' : card.color === '#a78bfa' ? '167, 139, 250' : card.color === '#10b981' ? '16, 185, 129' : card.color === '#f59e0b' ? '245, 158, 11' : card.color === '#ef4444' ? '239, 68, 68' : '6, 182, 212'}, 0.15)`,
+                borderRadius: '0.75rem',
+                padding: '1.5rem',
+                backdropFilter: 'blur(10px)',
+                transition: 'all 0.3s ease',
               }}
             >
-              No projects yet
-            </p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: designTokens.spacing.md }}>
-              {projects.slice(0, 3).map((project) => (
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                <p style={{ color: '#94a3b8', fontSize: '0.875rem', fontWeight: 500 }}>{card.label}</p>
+                <span style={{ fontSize: '1.5rem' }}>{card.icon}</span>
+              </div>
+              <div
+                style={{
+                  fontFamily: "'Fira Code', monospace",
+                  fontSize: card.label === 'Total Revenue' ? '1.5rem' : '2.25rem',
+                  color: card.color,
+                  fontWeight: 700,
+                }}
+              >
+                {card.value}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Recent Projects */}
+        <div style={{
+          background: 'rgba(26, 31, 58, 0.8)',
+          border: '1px solid rgba(0, 217, 255, 0.1)',
+          borderRadius: '0.75rem',
+          padding: '2rem',
+          backdropFilter: 'blur(10px)',
+        }}>
+          <h2 style={{ color: '#f1f5f9', marginBottom: '1.5rem', fontSize: '1.25rem' }}>Recent Projects</h2>
+
+          {recentProjects.length > 0 ? (
+            <div style={{ display: 'grid', gap: '1rem' }}>
+              {recentProjects.map((project) => (
                 <div
                   key={project.id}
                   style={{
-                    padding: designTokens.spacing.md,
-                    backgroundColor: designTokens.colors.neutral[50],
-                    borderRadius: designTokens.borderRadius.md,
-                    borderLeft: `4px solid ${designTokens.colors.primary}`,
+                    background: 'rgba(15, 23, 42, 0.5)',
+                    border: '1px solid rgba(0, 217, 255, 0.05)',
+                    borderRadius: '0.5rem',
+                    padding: '1rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}
                 >
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'start',
-                      marginBottom: designTokens.spacing.sm,
-                    }}
-                  >
-                    <p
+                  <div>
+                    <h4 style={{ color: '#f1f5f9', marginBottom: '0.25rem' }}>{project.name}</h4>
+                    <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>{project.address}</p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <span
                       style={{
+                        background: `rgba(${statusColors[project.status] === '#cbd5e1' ? '203, 213, 225' : statusColors[project.status] === '#00d9ff' ? '0, 217, 255' : statusColors[project.status] === '#a78bfa' ? '167, 139, 250' : '16, 185, 129'}, 0.15)`,
+                        color: statusColors[project.status],
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '9999px',
+                        fontSize: '0.75rem',
                         fontWeight: 600,
-                        margin: 0,
-                        color: designTokens.colors.neutral[900],
                       }}
                     >
-                      {project.name}
-                    </p>
-                    <Badge variant={project.status === 'completed' ? 'success' : 'info'}>
                       {project.status}
-                    </Badge>
+                    </span>
+                    <div style={{ fontFamily: "'Fira Code', monospace", color: '#a78bfa', fontWeight: 700 }}>
+                      ${project.budget.toLocaleString()}
+                    </div>
                   </div>
-                  <p
-                    style={{
-                      fontSize: designTokens.fontSize.sm,
-                      color: designTokens.colors.neutral[500],
-                      margin: 0,
-                    }}
-                  >
-                    {project.address.city}, {project.address.state}
-                  </p>
                 </div>
               ))}
             </div>
+          ) : (
+            <p style={{ color: '#94a3b8' }}>No projects yet. Create your first project to get started.</p>
           )}
-        </Card>
-
-        {/* Quick Actions */}
-        <Card
-          style={{
-            padding: designTokens.spacing.lg,
-          }}
-        >
-          <h2
-            style={{
-              fontSize: designTokens.fontSize.xl,
-              fontWeight: 700,
-              margin: 0,
-              marginBottom: designTokens.spacing.lg,
-            }}
-          >
-            Quick Actions
-          </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: designTokens.spacing.md }}>
-            {[
-              { label: 'Create New Project', icon: '➕' },
-              { label: 'Generate Quote', icon: '📋' },
-              { label: 'Assign Crew', icon: '👥' },
-              { label: 'Create Invoice', icon: '💵' },
-            ].map((action) => (
-              <button
-                key={action.label}
-                style={{
-                  padding: designTokens.spacing.md,
-                  backgroundColor: 'transparent',
-                  border: `1px solid ${designTokens.colors.neutral[200]}`,
-                  borderRadius: designTokens.borderRadius.md,
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: designTokens.spacing.md,
-                  fontSize: designTokens.fontSize.sm,
-                  fontWeight: 600,
-                  color: designTokens.colors.neutral[900],
-                  transition: `all ${designTokens.transition.fast}`,
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget).style.backgroundColor = designTokens.colors.primary;
-                  (e.currentTarget).style.color = 'white';
-                  (e.currentTarget).style.borderColor = designTokens.colors.primary;
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget).style.backgroundColor = 'transparent';
-                  (e.currentTarget).style.color = designTokens.colors.neutral[900];
-                  (e.currentTarget).style.borderColor = designTokens.colors.neutral[200];
-                }}
-              >
-                <span>{action.icon}</span>
-                {action.label}
-              </button>
-            ))}
-          </div>
-        </Card>
+        </div>
       </div>
-    </RootLayout>
+    </main>
   );
 }

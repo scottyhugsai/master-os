@@ -4,7 +4,7 @@ from database import get_db, Project, User
 from models import ProjectCreate, ProjectResponse, ProjectUpdate
 from typing import List
 
-router = APIRouter(prefix="/projects", tags=["projects"])
+router = APIRouter(prefix="/api/projects", tags=["projects"])
 
 
 def get_current_user(db: Session = Depends(get_db)) -> User:

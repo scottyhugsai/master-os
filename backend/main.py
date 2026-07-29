@@ -1,16 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from database import init_db
-from routers import auth, projects
+from routers import projects, quotes, crew, photos, invoices, users
 
-# Initialize FastAPI app
-app = FastAPI(
-    title="Master OS API",
-    description="Backend API for Master OS",
-    version="1.0.0"
-)
+app = FastAPI(title="Master OS API", version="1.0.0")
 
-# Configure CORS
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,38 +13,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize database
-init_db()
-
 # Include routers
-app.include_router(auth.router)
 app.include_router(projects.router)
-
+app.include_router(quotes.router)
+app.include_router(crew.router)
+app.include_router(photos.router)
+app.include_router(invoices.router)
+app.include_router(users.router)
 
 @app.get("/")
 def read_root():
-    """Root endpoint."""
-    return {
-        "message": "Master OS API",
-        "version": "1.0.0",
-        "status": "running"
-    }
-
+    return {"message": "Master OS API running"}
 
 @app.get("/health")
 def health_check():
-    """Health check endpoint."""
-    return {
-        "status": "healthy",
-        "service": "master-os-api"
-    }
-
+    return {"status": "ok"}
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True
-    )
+    uvicorn.run(app, host="0.0.0.0", port=8000)

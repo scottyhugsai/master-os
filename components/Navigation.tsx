@@ -4,134 +4,154 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-const INTERNAL_LINKS = [
-  { name: 'Dashboard', href: '/dashboard', icon: '📊' },
-  { name: 'Projects', href: '/projects', icon: '🏗️' },
-  { name: 'Quotes', href: '/quotes', icon: '📝' },
-  { name: 'Crew', href: '/crew', icon: '👥' },
-  { name: 'Gallery', href: '/gallery', icon: '🖼️' },
-  { name: 'Invoicing', href: '/invoicing', icon: '💰' },
-  { name: 'Settings', href: '/settings', icon: '⚙️' },
-];
-
-const EXTERNAL_LINKS = [
-  { name: 'Roofing', url: 'https://guayas-roofing-modern.vercel.app', icon: '🏠' },
-  { name: 'Quotes', url: 'https://guayas-quoting-tool.vercel.app', icon: '📋' },
-  { name: 'Aqua', url: 'https://aqua-finish.vercel.app', icon: '💧' },
-];
-
-export function Navigation() {
+export default function Navigation() {
   const pathname = usePathname();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const navItems = [
+    { href: '/dashboard', label: 'Dashboard' },
+    { href: '/projects', label: 'Projects' },
+    { href: '/quotes', label: 'Quotes' },
+    { href: '/crew', label: 'Crew' },
+    { href: '/gallery', label: 'Gallery' },
+    { href: '/invoicing', label: 'Invoicing' },
+    { href: '/settings', label: 'Settings' },
+  ];
 
   const isActive = (href: string) => pathname === href;
 
   return (
-    <>
-      {/* HEADER */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-[#13172e] border-b border-[#334155] backdrop-blur-md">
-        <div className="h-20 px-4 flex items-center justify-between">
-          {/* Left: Logo + Hamburger */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 hover:bg-[#1a1f3a] rounded-lg text-[#cbd5e1]"
-              aria-label="Toggle menu"
-            >
-              ☰
-            </button>
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="text-2xl">🏗️</div>
-              <div>
-                <div className="font-bold text-white text-sm leading-tight">MASTER OS</div>
-                <div className="text-xs text-[#94a3b8]">Roofing Pro</div>
-              </div>
-            </Link>
-          </div>
+    <nav style={{
+      position: 'sticky',
+      top: 0,
+      zIndex: 50,
+      background: 'rgba(15, 23, 42, 0.95)',
+      backdropFilter: 'blur(10px)',
+      borderBottom: '1px solid rgba(0, 217, 255, 0.1)',
+    }}>
+      <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '1rem 0',
+        }}>
+          {/* Logo */}
+          <Link href="/" style={{
+            fontWeight: 700,
+            fontSize: '1.125rem',
+            color: '#00d9ff',
+            transition: 'color 0.2s ease',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = '#a78bfa'}
+          onMouseLeave={(e) => e.currentTarget.style.color = '#00d9ff'}
+          >
+            Master OS
+          </Link>
 
-          {/* Right: Quick Links (Desktop Only) */}
-          <div className="hidden md:flex items-center gap-1">
-            {EXTERNAL_LINKS.map(link => (
-              <a
-                key={link.url}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 hover:bg-[#1a1f3a] rounded-lg text-[#cbd5e1] hover:text-[#3b82f6] transition text-lg"
-                title={link.name}
+          {/* Mobile hamburger button */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            style={{
+              display: 'none',
+              background: 'transparent',
+              color: '#f1f5f9',
+              padding: '0.5rem',
+              cursor: 'pointer',
+              fontSize: '1.5rem',
+            }}
+            className="mobile-menu-btn"
+          >
+            ☰
+          </button>
+
+          {/* Desktop navigation */}
+          <div style={{
+            display: 'flex',
+            gap: '0.5rem',
+            alignItems: 'center',
+          }}>
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                style={{
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  color: isActive(item.href) ? '#0f172a' : '#cbd5e1',
+                  background: isActive(item.href) ? '#00d9ff' : 'transparent',
+                  border: isActive(item.href) ? 'none' : '1px solid rgba(0, 217, 255, 0.2)',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive(item.href)) {
+                    e.currentTarget.style.background = 'rgba(0, 217, 255, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(0, 217, 255, 0.5)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive(item.href)) {
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.borderColor = 'rgba(0, 217, 255, 0.2)';
+                  }
+                }}
               >
-                {link.icon}
-              </a>
+                {item.label}
+              </Link>
             ))}
           </div>
         </div>
-      </header>
 
-      {/* MOBILE SIDEBAR OVERLAY */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* SIDEBAR - MOBILE & DESKTOP */}
-      <aside
-        className={`fixed left-0 top-20 bottom-0 w-64 bg-[#13172e] border-r border-[#334155] overflow-y-auto transition-transform duration-300 z-30 lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        <div className="p-6 space-y-8">
-          {/* Navigation Section */}
-          <div>
-            <h2 className="text-xs font-bold text-[#94a3b8] uppercase tracking-widest mb-4">
-              Navigation
-            </h2>
-            <nav className="space-y-1">
-              {INTERNAL_LINKS.map(link => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-sm transition ${
-                    isActive(link.href)
-                      ? 'bg-[#1e40af] text-white'
-                      : 'text-[#cbd5e1] hover:bg-[#1a1f3a] hover:text-white'
-                  }`}
-                >
-                  <span className="text-lg">{link.icon}</span>
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div style={{
+            display: 'none',
+            borderTop: '1px solid rgba(0, 217, 255, 0.1)',
+            paddingTop: '1rem',
+            paddingBottom: '1rem',
+            gap: '0.5rem',
+            flexDirection: 'column',
+          }} className="mobile-menu">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  padding: '0.75rem 1rem',
+                  borderRadius: '0.5rem',
+                  color: isActive(item.href) ? '#0f172a' : '#cbd5e1',
+                  background: isActive(item.href) ? '#00d9ff' : 'transparent',
+                  border: isActive(item.href) ? 'none' : '1px solid rgba(0, 217, 255, 0.2)',
+                  transition: 'all 0.2s ease',
+                  textAlign: 'left',
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
+        )}
+      </div>
 
-          {/* Business Sites Section */}
-          <div className="border-t border-[#334155] pt-6">
-            <h3 className="text-xs font-bold text-[#94a3b8] uppercase tracking-widest mb-4">
-              Business Sites
-            </h3>
-            <div className="space-y-2">
-              {EXTERNAL_LINKS.map(link => (
-                <a
-                  key={link.url}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setSidebarOpen(false)}
-                  className="block p-3 rounded-lg bg-[#1a1f3a] border border-[#334155] hover:border-[#3b82f6] hover:bg-[#1e40af]/20 transition group"
-                >
-                  <div className="flex items-center gap-2 text-white font-medium group-hover:text-[#3b82f6]">
-                    <span className="text-lg">{link.icon}</span>
-                    {link.name}
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </aside>
-    </>
+      <style>{`
+        @media (max-width: 768px) {
+          .mobile-menu-btn {
+            display: block !important;
+          }
+
+          nav div > div:last-of-type {
+            display: none !important;
+          }
+
+          .mobile-menu {
+            display: flex !important;
+          }
+        }
+      `}</style>
+    </nav>
   );
 }

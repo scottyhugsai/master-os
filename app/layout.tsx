@@ -1,10 +1,15 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import { Navigation } from '@/components/Navigation';
 
 export const metadata: Metadata = {
-  title: 'Master OS - Professional Roofing Management Platform',
-  description: 'All-in-one platform for roofing project management, quoting, crew coordination, and business analytics.',
+  title: 'Master OS - Roofing Management',
+  description: 'Professional roofing business management platform',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
@@ -14,11 +19,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-[#0a0e27]">
-        <Navigation />
-        <main className="min-h-screen">
-          {children}
-        </main>
+      <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Master OS" />
+        <meta name="theme-color" content="#1a1a1a" />
+      </head>
+      <body className="bg-slate-950 text-slate-100">
+        {children}
       </body>
     </html>
   );
