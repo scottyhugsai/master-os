@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Navigation } from '@/components/Navigation';
 
 export const metadata: Metadata = {
-  title: 'Master OS - Roofing Management',
-  description: 'Professional roofing project management system',
+  title: 'Master OS - Roofing Management Hub',
+  description: 'Centralized hub for roofing project management, quoting, crew coordination, and business analytics',
 };
 
 export default function RootLayout({
@@ -13,7 +14,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Navigation />
+        <main className="pt-16 min-h-screen">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
