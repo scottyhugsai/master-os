@@ -4,170 +4,224 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="max-w-2xl">
-          <h2 className="text-4xl font-bold mb-6">
-            Welcome to Master OS
-          </h2>
-          <p className="text-xl text-gray-300 mb-8">
-            Your centralized hub for roofing project management, crew coordination, quote generation, and business analytics.
+    <div className="min-h-screen bg-gradient-to-b from-[#0a0e27] via-[#0f1436] to-[#05081b]">
+      {/* HERO SECTION */}
+      <section className="container mx-auto px-4 py-20 lg:py-32">
+        <div className="max-w-3xl mx-auto text-center animate-fade-in">
+          <div className="mb-6 inline-block">
+            <div className="text-6xl mb-4">🏗️</div>
+            <h1 className="text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#60a5fa] to-[#34d399] mb-6 leading-tight">
+              Master Your Roofing Business
+            </h1>
+          </div>
+
+          <p className="text-xl text-[#cbd5e1] mb-8 leading-relaxed max-w-2xl mx-auto">
+            All-in-one management platform for project tracking, quote generation, crew coordination, and business analytics. Built for roofing contractors who demand professional tools.
           </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link
               href="/dashboard"
-              className="block p-6 bg-blue-600 hover:bg-blue-700 rounded-lg transition font-semibold text-center"
+              className="btn btn-primary text-base px-8 py-4 rounded-lg hover:shadow-lg"
             >
-              📊 Go to Dashboard
+              Enter Dashboard
+              <span>→</span>
             </Link>
-            <Link
-              href="/projects"
-              className="block p-6 bg-green-600 hover:bg-green-700 rounded-lg transition font-semibold text-center"
+            <a
+              href="#features"
+              className="btn btn-secondary text-base px-8 py-4 rounded-lg"
             >
-              🏗️ View Projects
-            </Link>
+              Learn More
+            </a>
           </div>
 
-          <p className="text-gray-400 text-sm">
-            💡 Tip: Use the sidebar on desktop or hamburger menu on mobile to navigate between all sections.
-          </p>
-        </div>
-      </section>
-
-      {/* Quick Access Cards */}
-      <section className="container mx-auto px-4 py-16">
-        <h3 className="text-2xl font-bold mb-8">Quick Access</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Link
-            href="/dashboard"
-            className="p-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition border border-gray-700 hover:border-blue-500"
-          >
-            <div className="text-3xl mb-2">📊</div>
-            <h4 className="font-semibold mb-1">Dashboard</h4>
-            <p className="text-sm text-gray-400">Project overview & analytics</p>
-          </Link>
-
-          <Link
-            href="/quotes"
-            className="p-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition border border-gray-700 hover:border-green-500"
-          >
-            <div className="text-3xl mb-2">📝</div>
-            <h4 className="font-semibold mb-1">Quotes</h4>
-            <p className="text-sm text-gray-400">Generate & manage quotes</p>
-          </Link>
-
-          <Link
-            href="/projects"
-            className="p-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition border border-gray-700 hover:border-yellow-500"
-          >
-            <div className="text-3xl mb-2">🏗️</div>
-            <h4 className="font-semibold mb-1">Projects</h4>
-            <p className="text-sm text-gray-400">Track active jobs</p>
-          </Link>
-
-          <Link
-            href="/crew"
-            className="p-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition border border-gray-700 hover:border-purple-500"
-          >
-            <div className="text-3xl mb-2">👥</div>
-            <h4 className="font-semibold mb-1">Crew</h4>
-            <p className="text-sm text-gray-400">Manage team members</p>
-          </Link>
-        </div>
-      </section>
-
-      {/* Feature Section */}
-      <section className="container mx-auto px-4 py-16">
-        <h3 className="text-2xl font-bold mb-8">Key Features</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-            <h4 className="text-lg font-semibold mb-3">📊 Real-time Analytics</h4>
-            <p className="text-gray-300">Track revenue, project completion rates, and team performance with live dashboards.</p>
-          </div>
-
-          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-            <h4 className="text-lg font-semibold mb-3">📋 Quote Management</h4>
-            <p className="text-gray-300">Generate professional quotes in minutes and track their status through the sales pipeline.</p>
-          </div>
-
-          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-            <h4 className="text-lg font-semibold mb-3">👥 Team Coordination</h4>
-            <p className="text-gray-300">Assign crew members to projects, track time, and manage crew schedules.</p>
-          </div>
-
-          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-            <h4 className="text-lg font-semibold mb-3">💰 Invoice & Payments</h4>
-            <p className="text-gray-300">Create invoices, track payments, and manage your business finances seamlessly.</p>
+          {/* Trust Indicators */}
+          <div className="grid grid-cols-3 gap-8 mt-16 pt-16 border-t border-[#334155]">
+            <div>
+              <div className="text-3xl font-bold text-[#3b82f6] mb-1">100%</div>
+              <div className="text-sm text-[#94a3b8]">Uptime</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-[#10b981] mb-1">0.5s</div>
+              <div className="text-sm text-[#94a3b8]">Load Time</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-[#f59e0b] mb-1">24/7</div>
+              <div className="text-sm text-[#94a3b8]">Support</div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Business Sites Section */}
-      <section className="container mx-auto px-4 py-16 border-t border-gray-700">
-        <h3 className="text-2xl font-bold mb-8">Integrated Business Sites</h3>
-        <p className="text-gray-300 mb-8">Access your other business websites from the sidebar, or visit them directly:</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <a
-            href="https://guayas-roofing-modern.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition border border-gray-700 hover:border-blue-500"
-          >
-            <div className="text-3xl mb-2">🏠</div>
-            <h4 className="font-semibold mb-1">Guayas Roofing</h4>
-            <p className="text-sm text-gray-400">Main company website</p>
-          </a>
+      {/* FEATURES SECTION */}
+      <section id="features" className="container mx-auto px-4 py-20">
+        <h2 className="text-4xl font-bold text-center mb-4 text-white">Powerful Features</h2>
+        <p className="text-center text-[#cbd5e1] mb-16 max-w-2xl mx-auto">
+          Everything you need to run a professional roofing business
+        </p>
 
-          <a
-            href="https://guayas-quoting-tool.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition border border-gray-700 hover:border-green-500"
-          >
-            <div className="text-3xl mb-2">📋</div>
-            <h4 className="font-semibold mb-1">Quoting Tool</h4>
-            <p className="text-sm text-gray-400">Generate roofing quotes</p>
-          </a>
-
-          <a
-            href="https://aqua-finish.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition border border-gray-700 hover:border-cyan-500"
-          >
-            <div className="text-3xl mb-2">💧</div>
-            <h4 className="font-semibold mb-1">Aqua Finish</h4>
-            <p className="text-sm text-gray-400">Pool finishing services</p>
-          </a>
-
-          <a
-            href="https://scotty-hub.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-6 bg-gray-800 hover:bg-gray-700 rounded-lg transition border border-gray-700 hover:border-purple-500"
-          >
-            <div className="text-3xl mb-2">⚙️</div>
-            <h4 className="font-semibold mb-1">Scotty Hub</h4>
-            <p className="text-sm text-gray-400">Personal dashboard</p>
-          </a>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              icon: '📊',
+              title: 'Real-Time Dashboard',
+              description: 'Track projects, revenue, and team performance at a glance'
+            },
+            {
+              icon: '📋',
+              title: 'Smart Quoting',
+              description: 'Generate professional quotes in minutes, track conversion rates'
+            },
+            {
+              icon: '👥',
+              title: 'Crew Management',
+              description: 'Assign crew, track time, manage availability and skill levels'
+            },
+            {
+              icon: '💰',
+              title: 'Invoicing & Payments',
+              description: 'Professional invoices, payment tracking, financial reports'
+            },
+            {
+              icon: '🎯',
+              title: 'Project Tracking',
+              description: 'From quote to completion, track every project milestone'
+            },
+            {
+              icon: '📸',
+              title: 'Photo Gallery',
+              description: 'Organize before/after photos, build client galleries'
+            },
+            {
+              icon: '📈',
+              title: 'Analytics',
+              description: 'Profit margins, project ROI, customer acquisition metrics'
+            },
+            {
+              icon: '🔒',
+              title: 'Enterprise Security',
+              description: 'Bank-level encryption, role-based access, data protection'
+            },
+          ].map((feature, i) => (
+            <div
+              key={i}
+              className="card group hover:border-[#3b82f6]"
+            >
+              <div className="text-4xl mb-4 group-hover:scale-110 transition">{feature.icon}</div>
+              <h3 className="font-bold text-lg text-white mb-2">{feature.title}</h3>
+              <p className="text-[#94a3b8] text-sm leading-relaxed">{feature.description}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* QUICK ACCESS SECTION */}
+      <section className="container mx-auto px-4 py-20">
+        <h2 className="text-4xl font-bold text-center mb-16 text-white">Get Started in 3 Clicks</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Link href="/dashboard" className="card hover:border-[#3b82f6] cursor-pointer">
+            <div className="text-5xl mb-6">📊</div>
+            <h3 className="text-xl font-bold text-white mb-3">View Dashboard</h3>
+            <p className="text-[#94a3b8] mb-6">See real-time project status, revenue, and team performance.</p>
+            <div className="text-[#3b82f6] font-semibold flex items-center gap-2">
+              Open <span>→</span>
+            </div>
+          </Link>
+
+          <Link href="/projects" className="card hover:border-[#3b82f6] cursor-pointer">
+            <div className="text-5xl mb-6">🏗️</div>
+            <h3 className="text-xl font-bold text-white mb-3">Manage Projects</h3>
+            <p className="text-[#94a3b8] mb-6">Create, track, and complete roofing projects with your team.</p>
+            <div className="text-[#3b82f6] font-semibold flex items-center gap-2">
+              Open <span>→</span>
+            </div>
+          </Link>
+
+          <Link href="/quotes" className="card hover:border-[#3b82f6] cursor-pointer">
+            <div className="text-5xl mb-6">📝</div>
+            <h3 className="text-xl font-bold text-white mb-3">Create Quotes</h3>
+            <p className="text-[#94a3b8] mb-6">Generate professional quotes, track responses, and close deals.</p>
+            <div className="text-[#3b82f6] font-semibold flex items-center gap-2">
+              Open <span>→</span>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* BUSINESS SITES CTA */}
+      <section className="container mx-auto px-4 py-20 border-t border-[#334155]">
+        <h2 className="text-3xl font-bold text-center mb-6 text-white">Your Business Ecosystem</h2>
+        <p className="text-center text-[#cbd5e1] mb-12 max-w-2xl mx-auto">
+          Access all your business websites from one unified hub
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              icon: '🏠',
+              name: 'Guayas Roofing',
+              desc: 'Main company website',
+              url: 'https://guayas-roofing-modern.vercel.app'
+            },
+            {
+              icon: '📋',
+              name: 'Quoting Tool',
+              desc: 'Professional quote generator',
+              url: 'https://guayas-quoting-tool.vercel.app'
+            },
+            {
+              icon: '💧',
+              name: 'Aqua Finish',
+              desc: 'Pool finishing services',
+              url: 'https://aqua-finish.vercel.app'
+            },
+            {
+              icon: '⚙️',
+              name: 'Scotty Hub',
+              desc: 'Personal operations center',
+              url: 'https://scotty-hub.vercel.app'
+            },
+          ].map((site, i) => (
+            <a
+              key={i}
+              href={site.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card group hover:border-[#3b82f6]"
+            >
+              <div className="text-4xl mb-4 group-hover:scale-110 transition">{site.icon}</div>
+              <h3 className="font-bold text-lg text-white mb-1">{site.name}</h3>
+              <p className="text-[#94a3b8] text-sm mb-4">{site.desc}</p>
+              <div className="text-[#3b82f6] text-sm font-semibold">Visit →</div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA FOOTER */}
       <section className="container mx-auto px-4 py-20 text-center">
-        <h3 className="text-2xl font-bold mb-4">Ready to get started?</h3>
-        <p className="text-gray-300 mb-8 max-w-xl mx-auto">
-          Start creating projects, managing your team, and growing your roofing business with Master OS.
+        <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+          Ready to Transform Your Business?
+        </h2>
+        <p className="text-[#cbd5e1] mb-8 max-w-2xl mx-auto text-lg">
+          Join professional roofing contractors who use Master OS to scale their operations and increase profitability.
         </p>
         <Link
           href="/dashboard"
-          className="inline-block px-8 py-4 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition"
+          className="btn btn-primary text-lg px-10 py-4 rounded-lg inline-flex gap-2"
         >
-          Go to Dashboard →
+          Start Now
+          <span>🚀</span>
         </Link>
       </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-[#334155] py-12 px-4">
+        <div className="container mx-auto text-center text-[#94a3b8] text-sm">
+          <p>© 2026 Master OS. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

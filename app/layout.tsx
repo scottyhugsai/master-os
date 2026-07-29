@@ -3,8 +3,8 @@ import './globals.css';
 import { Navigation } from '@/components/Navigation';
 
 export const metadata: Metadata = {
-  title: 'Master OS - Roofing Management Hub',
-  description: 'Centralized hub for roofing project management, quoting, crew coordination, and business analytics',
+  title: 'Master OS - Professional Roofing Management Platform',
+  description: 'All-in-one platform for roofing project management, quoting, crew coordination, and business analytics.',
 };
 
 export default function RootLayout({
@@ -14,9 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-gray-900 text-white">
+      <body className="bg-[#0a0e27]">
         <Navigation />
-        <main className="pt-16 min-h-screen lg:ml-64">
+        <main className="min-h-screen">
           {children}
         </main>
       </body>
