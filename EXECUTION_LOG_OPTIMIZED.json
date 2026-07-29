@@ -1,0 +1,149 @@
+{
+  "start_time": "2026-07-29T02:53:13.962669",
+  "budget_constraint": "$200-300/month",
+  "optimization_active": true,
+  "status": "RUNNING",
+  "infrastructure": {
+    "compute": "Mac mini (no AWS, no cloud VMs)",
+    "database": "PostgreSQL local + optional cloud backup",
+    "deployment": "Docker containers on Mac mini",
+    "scaling": "Agent-based (horizontal) not server-based (vertical)",
+    "monitoring": "Self-hosted (Prometheus + Grafana)",
+    "cdn": "Cloudflare free tier for static assets"
+  },
+  "phase_1": {
+    "week_1": {
+      "name": "Trading Bot Critical Fixes - BUDGET OPTIMIZED",
+      "cost_optimization": {
+        "jwt_auth": "Use HS256 (no external service needed)",
+        "rate_limiting": "Use slowapi (Python, free)",
+        "circuit_breaker": "Use pybreaker (free)",
+        "monitoring": "Self-hosted Prometheus (free)"
+      },
+      "tasks": [
+        {
+          "id": "auth",
+          "name": "JWT Authentication",
+          "hours": 20,
+          "status": "IN_PROGRESS",
+          "cost": 0
+        },
+        {
+          "id": "ratelimit",
+          "name": "API Rate Limiting",
+          "hours": 10,
+          "status": "QUEUED",
+          "cost": 0
+        },
+        {
+          "id": "circuit",
+          "name": "Circuit Breaker",
+          "hours": 10,
+          "status": "QUEUED",
+          "cost": 0
+        },
+        {
+          "id": "docs",
+          "name": "API Documentation",
+          "hours": 10,
+          "status": "QUEUED",
+          "cost": 0
+        }
+      ]
+    },
+    "week_2": {
+      "name": "Agent System Foundation",
+      "cost_optimization": {
+        "postgres": "Local instance on Mac mini",
+        "cfo_agent": "Claude Haiku (not Sonnet)",
+        "queue": "Use Celery + Redis (both free/self-hosted)"
+      },
+      "tasks": [
+        {
+          "id": "schema",
+          "name": "PostgreSQL Schema",
+          "hours": 20,
+          "status": "QUEUED",
+          "cost": 0
+        },
+        {
+          "id": "cfo_agent",
+          "name": "CFO Supervisor Agent",
+          "hours": 20,
+          "status": "QUEUED",
+          "cost_per_call": 0.015
+        },
+        {
+          "id": "health_monitor",
+          "name": "Health Monitoring",
+          "hours": 10,
+          "status": "QUEUED",
+          "cost": 0
+        }
+      ]
+    },
+    "week_3": {
+      "name": "Database & API",
+      "tasks": [
+        {
+          "id": "db_setup",
+          "name": "PostgreSQL Setup",
+          "hours": 20,
+          "status": "QUEUED",
+          "cost": 0
+        },
+        {
+          "id": "api_contracts",
+          "name": "API Contracts (25+ endpoints)",
+          "hours": 20,
+          "status": "QUEUED",
+          "cost": 0
+        }
+      ]
+    },
+    "week_4": {
+      "name": "Frontend Bootstrap",
+      "tasks": [
+        {
+          "id": "auth_ui",
+          "name": "Authentication UI",
+          "hours": 20,
+          "status": "QUEUED",
+          "cost": 0
+        },
+        {
+          "id": "business_wizard",
+          "name": "Business Wizard (5 steps)",
+          "hours": 20,
+          "status": "QUEUED",
+          "cost": 0
+        },
+        {
+          "id": "admin_dash",
+          "name": "Admin Dashboard",
+          "hours": 5,
+          "status": "QUEUED",
+          "cost": 0
+        }
+      ]
+    }
+  },
+  "monthly_cost_estimate": {
+    "claude_api": 80,
+    "mac_mini_power": 30,
+    "domain": 12,
+    "api_buffer": 150,
+    "contingency": 28,
+    "total": 300
+  },
+  "stats": {
+    "total_tasks": 45,
+    "completed_tasks": 0,
+    "in_progress_tasks": 1,
+    "total_hours": 485,
+    "hours_completed": 0,
+    "agents_deployed": 0,
+    "target_agents": 45,
+    "cost_savings_vs_original": "93% ($3,500 \u2192 $300)"
+  }
+}
