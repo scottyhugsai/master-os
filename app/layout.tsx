@@ -14,9 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-gray-900 text-white">
         <Navigation />
-        <main className="pt-16 min-h-screen">
+        <main className="pt-16 min-h-screen lg:ml-64">
           {children}
         </main>
       </body>
