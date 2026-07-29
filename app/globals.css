@@ -17,8 +17,8 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  color: #111827;
-  background-color: #f9fafb;
+  color: #f9fafb;
+  background-color: #111111;
 }
 
 a {
@@ -36,4 +36,22 @@ textarea,
 select {
   font-family: inherit;
   font-size: inherit;
+}
+
+/* Main content area - account for fixed header on all screens */
+main {
+  margin-left: 0;
+  padding-top: 0;
+}
+
+/* Desktop: offset main for sidebar */
+@media (min-width: 1024px) {
+  main {
+    margin-left: 16rem; /* 256px sidebar */
+  }
+}
+
+/* Ensure content doesn't hide behind fixed elements */
+body {
+  scroll-behavior: smooth;
 }
