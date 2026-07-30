@@ -18,6 +18,20 @@ class ProjectUpdate(BaseModel):
     status: Optional[str] = None
     budget: Optional[float] = None
 
+class ProjectResponse(BaseModel):
+    id: int
+    name: str
+    description: Optional[str]
+    address: Optional[str]
+    status: str
+    budget: float
+    user_id: int
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
+
 # Quote Schemas
 class QuoteCreate(BaseModel):
     title: str
@@ -32,6 +46,19 @@ class QuoteUpdate(BaseModel):
     amount: Optional[float] = None
     status: Optional[str] = None
     project_id: Optional[int] = None
+
+class QuoteResponse(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+    amount: float
+    status: str
+    project_id: Optional[int]
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
 
 # Crew Schemas
 class CrewCreate(BaseModel):
@@ -48,31 +75,68 @@ class CrewUpdate(BaseModel):
     phone: Optional[str] = None
     project_id: Optional[int] = None
 
+class CrewResponse(BaseModel):
+    id: int
+    name: str
+    role: str
+    email: Optional[str]
+    phone: Optional[str]
+    project_id: Optional[int]
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
+
 # Photo Schemas
 class PhotoCreate(BaseModel):
-    title: str
     url: str
+    description: Optional[str] = None
     project_id: Optional[int] = None
 
 class PhotoUpdate(BaseModel):
-    title: Optional[str] = None
     url: Optional[str] = None
+    description: Optional[str] = None
     project_id: Optional[int] = None
+
+class PhotoResponse(BaseModel):
+    id: int
+    url: str
+    description: Optional[str]
+    project_id: Optional[int]
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
 
 # Invoice Schemas
 class InvoiceCreate(BaseModel):
-    invoice_number: str
+    number: str
     amount: float
     status: str = "draft"
     project_id: Optional[int] = None
-    due_date: Optional[str] = None
+    due_date: Optional[datetime] = None
 
 class InvoiceUpdate(BaseModel):
-    invoice_number: Optional[str] = None
+    number: Optional[str] = None
     amount: Optional[float] = None
     status: Optional[str] = None
     project_id: Optional[int] = None
-    due_date: Optional[str] = None
+    due_date: Optional[datetime] = None
+
+class InvoiceResponse(BaseModel):
+    id: int
+    number: str
+    amount: float
+    status: str
+    project_id: Optional[int]
+    due_date: Optional[datetime]
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
 
 # User Schemas
 class UserUpdate(BaseModel):
@@ -82,5 +146,19 @@ class UserUpdate(BaseModel):
     address: Optional[str] = None
     city: Optional[str] = None
     state: Optional[str] = None
-    zip: Optional[str] = None
-    country: Optional[str] = None
+    zip_code: Optional[str] = None
+
+class UserResponse(BaseModel):
+    id: int
+    email: str
+    company_name: Optional[str]
+    phone: Optional[str]
+    address: Optional[str]
+    city: Optional[str]
+    state: Optional[str]
+    zip_code: Optional[str]
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
