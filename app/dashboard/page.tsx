@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api-client';
+import { SystemStatus } from '@/components/SystemStatus';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
@@ -200,6 +201,8 @@ export default function Dashboard() {
             {error}
           </div>
         )}
+
+        <SystemStatus />
 
         <div style={{ marginBottom: '3rem' }}>
           <h1 style={{ color: '#f1f5f9', marginBottom: '2rem', fontSize: '2rem' }}>Dashboard</h1>
