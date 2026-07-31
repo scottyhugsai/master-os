@@ -141,3 +141,6 @@ zipp==3.21.0
 fastapi
 uvicorn
 python-dotenv
+sqlalchemy
+passlib
+bcrypt

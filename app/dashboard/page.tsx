@@ -4,6 +4,18 @@ import { useState, useEffect } from 'react';
 import { api } from '@/lib/api-client';
 import { SystemStatus } from '@/components/SystemStatus';
 
+interface Receipt {
+  id: number;
+  action_type: string;
+  entity_type: string;
+  entity_id: number;
+  entity_name: string;
+  user_id: number;
+  user_name: string;
+  timestamp: string;
+  details?: Record<string, any>;
+}
+
 export default function Dashboard() {
   const [stats, setStats] = useState({
     // Business
@@ -28,8 +40,10 @@ export default function Dashboard() {
   const [recentProjects, setRecentProjects] = useState<any[]>([]);
   const [agents, setAgents] = useState<any[]>([]);
   const [notifications, setNotifications] = useState<any[]>([]);
+  const [receipts, setReceipts] = useState<Receipt[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [receiptFilter, setReceiptFilter] = useState<string>('all');
 
   useEffect(() => {
     fetchDashboardData();
@@ -40,11 +54,12 @@ export default function Dashboard() {
   const fetchDashboardData = async () => {
     try {
       setError('');
-      const [ecosystemRes, projectsRes, agentsRes, notificationsRes] = await Promise.all([
+      const [ecosystemRes, projectsRes, agentsRes, notificationsRes, receiptsRes] = await Promise.all([
         api.getEcosystemDashboard().catch(() => null),
         api.getProjects().catch(() => []),
         api.getAgents().catch(() => ({ agents: [] })),
         api.getNotifications(5).catch(() => ({ notifications: [] })),
+        api.getReceipts(50).catch(() => []),
       ]);
 
       // Parse ecosystem data
@@ -77,6 +92,10 @@ export default function Dashboard() {
 
       if (notificationsRes?.notifications) {
         setNotifications(notificationsRes.notifications);
+      }
+
+      if (Array.isArray(receiptsRes)) {
+        setReceipts(receiptsRes);
       }
 
       setLoading(false);
@@ -174,6 +193,87 @@ export default function Dashboard() {
       </div>
     );
   };
+
+  const getActionIcon = (actionType: string) => {
+    const iconMap: Record<string, string> = {
+      'project_created': '📋',
+      'project_updated': '✏️',
+      'project_completed': '✅',
+      'crew_assigned': '👥',
+      'crew_created': '👤',
+      'quote_sent': '📄',
+      'quote_created': '📝',
+      'quote_approved': '✓',
+      'invoice_created': '💵',
+      'invoice_sent': '📮',
+    };
+    return iconMap[actionType] || '📌';
+  };
+
+  const getActionColor = (actionType: string) => {
+    if (actionType.includes('created')) return '#00d9ff';
+    if (actionType.includes('updated')) return '#a78bfa';
+    if (actionType.includes('assigned')) return '#06b6d4';
+    if (actionType.includes('approved') || actionType.includes('completed')) return '#10b981';
+    if (actionType.includes('sent')) return '#f59e0b';
+    return '#cbd5e1';
+  };
+
+  const ReceiptItem = ({ receipt }: { receipt: Receipt }) => {
+    const actionColor = getActionColor(receipt.action_type);
+    const actionIcon = getActionIcon(receipt.action_type);
+    const timestamp = new Date(receipt.timestamp);
+    const formattedTime = timestamp.toLocaleString();
+    const relativeTime = getRelativeTime(timestamp);
+
+    return (
+      <div
+        style={{
+          background: 'rgba(26, 31, 58, 0.5)',
+          border: `1px solid ${actionColor}30`,
+          borderRadius: '0.5rem',
+          padding: '1rem',
+          marginBottom: '0.75rem',
+          display: 'flex',
+          gap: '1rem',
+          alignItems: 'flex-start',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '1.5rem',
+            minWidth: '2rem',
+            textAlign: 'center',
+          }}
+        >
+          {actionIcon}
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '0.25rem' }}>
+            <div>
+              <span style={{ color: actionColor, fontWeight: 600, fontSize: '0.875rem', textTransform: 'uppercase' }}>
+                {receipt.action_type.replace(/_/g, ' ')}
+              </span>
+              <div style={{ color: '#cbd5e1', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                {receipt.entity_name || `${receipt.entity_type} #${receipt.entity_id}`}
+              </div>
+            </div>
+            <div style={{ textAlign: 'right', fontSize: '0.75rem', color: '#94a3b8' }}>
+              <div title={formattedTime}>{relativeTime}</div>
+            </div>
+          </div>
+          <div style={{ color: '#94a3b8', fontSize: '0.75rem', marginTop: '0.5rem' }}>
+            by <span style={{ color: '#cbd5e1', fontWeight: 500 }}>{receipt.user_name || `User #${receipt.user_id}`}</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const filteredReceipts = receipts.filter((receipt) => {
+    if (receiptFilter === 'all') return true;
+    return receipt.action_type.includes(receiptFilter);
+  });
 
   if (loading) {
     return (
@@ -367,6 +467,156 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {/* Receipt Log - Audit Trail */}
+          <div style={{ marginBottom: '3rem' }}>
+            <h2 style={{ color: '#06b6d4', fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>
+              📜 Receipt Log (Audit Trail)
+            </h2>
+            <div
+              style={{
+                background: '#1a1f3a',
+                border: '1px solid #06b6d440',
+                borderRadius: '0.75rem',
+                padding: '1.5rem',
+              }}
+            >
+              {/* Filter Buttons */}
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => setReceiptFilter('all')}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    borderRadius: '0.375rem',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    border: 'none',
+                    cursor: 'pointer',
+                    background: receiptFilter === 'all' ? '#06b6d4' : 'rgba(6, 182, 212, 0.2)',
+                    color: receiptFilter === 'all' ? '#0f172a' : '#06b6d4',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setReceiptFilter('created')}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    borderRadius: '0.375rem',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    border: 'none',
+                    cursor: 'pointer',
+                    background: receiptFilter === 'created' ? '#00d9ff' : 'rgba(0, 217, 255, 0.2)',
+                    color: receiptFilter === 'created' ? '#0f172a' : '#00d9ff',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  Created
+                </button>
+                <button
+                  onClick={() => setReceiptFilter('updated')}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    borderRadius: '0.375rem',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    border: 'none',
+                    cursor: 'pointer',
+                    background: receiptFilter === 'updated' ? '#a78bfa' : 'rgba(167, 139, 250, 0.2)',
+                    color: receiptFilter === 'updated' ? '#0f172a' : '#a78bfa',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  Updated
+                </button>
+                <button
+                  onClick={() => setReceiptFilter('assigned')}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    borderRadius: '0.375rem',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    border: 'none',
+                    cursor: 'pointer',
+                    background: receiptFilter === 'assigned' ? '#06b6d4' : 'rgba(6, 182, 212, 0.2)',
+                    color: receiptFilter === 'assigned' ? '#0f172a' : '#06b6d4',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  Assigned
+                </button>
+                <button
+                  onClick={() => setReceiptFilter('sent')}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    borderRadius: '0.375rem',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    border: 'none',
+                    cursor: 'pointer',
+                    background: receiptFilter === 'sent' ? '#f59e0b' : 'rgba(245, 158, 11, 0.2)',
+                    color: receiptFilter === 'sent' ? '#0f172a' : '#f59e0b',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  Sent
+                </button>
+              </div>
+
+              {/* Receipt List - Scrollable Timeline */}
+              <div
+                style={{
+                  maxHeight: '600px',
+                  overflowY: 'auto',
+                  paddingRight: '0.5rem',
+                }}
+              >
+                {filteredReceipts.length > 0 ? (
+                  <div>
+                    {filteredReceipts.map((receipt) => (
+                      <ReceiptItem key={receipt.id} receipt={receipt} />
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>
+                    No receipts found for the selected filter
+                  </div>
+                )}
+              </div>
+
+              {/* Stats */}
+              <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #06b6d420' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
+                  <div>
+                    <div style={{ color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase' }}>Total Actions</div>
+                    <div style={{ color: '#06b6d4', fontSize: '1.5rem', fontWeight: 700, fontFamily: 'Fira Code' }}>
+                      {receipts.length}
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase' }}>Projects Created</div>
+                    <div style={{ color: '#00d9ff', fontSize: '1.5rem', fontWeight: 700, fontFamily: 'Fira Code' }}>
+                      {receipts.filter(r => r.action_type === 'project_created').length}
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase' }}>Quotes Sent</div>
+                    <div style={{ color: '#f59e0b', fontSize: '1.5rem', fontWeight: 700, fontFamily: 'Fira Code' }}>
+                      {receipts.filter(r => r.action_type === 'quote_sent').length}
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase' }}>Crew Assigned</div>
+                    <div style={{ color: '#06b6d4', fontSize: '1.5rem', fontWeight: 700, fontFamily: 'Fira Code' }}>
+                      {receipts.filter(r => r.action_type === 'crew_assigned').length}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Notifications */}
           <div>
             <h2 style={{ color: '#f59e0b', fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>
@@ -393,4 +643,17 @@ export default function Dashboard() {
       </div>
     </main>
   );
+}
+
+// Helper function to format relative time
+function getRelativeTime(date: Date): string {
+  const now = new Date();
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (seconds < 60) return 'just now';
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+  if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+
+  return date.toLocaleDateString();
 }

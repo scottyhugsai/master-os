@@ -92,4 +92,10 @@ export const api = {
   getUser: (id: number) => fetchAPI(`/api/users/${id}`),
   updateUser: (id: number, data: any) =>
     fetchAPI(`/api/users/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+
+  // Audit Trail / Receipts
+  getReceipts: (limit: number = 100) =>
+    fetchAPI(`/api/receipts?limit=${limit}`),
+  createReceipt: (data: any) =>
+    fetchAPI('/api/receipts', { method: 'POST', body: JSON.stringify(data) }),
 };

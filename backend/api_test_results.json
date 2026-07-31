@@ -1,0 +1,387 @@
+{
+  "timestamp": "2026-07-31T04:46:03.035682",
+  "base_url": "http://localhost:8000",
+  "health_check": true,
+  "projects": {},
+  "quotes": {
+    "list_quotes": {
+      "status": 200,
+      "endpoint": "/api/quotes",
+      "count": 2,
+      "data": [
+        {
+          "id": 1,
+          "amount": 15000.0,
+          "status": "pending",
+          "created_at": "2026-07-31T04:45:58.595072",
+          "title": "Initial Project Estimate",
+          "description": "Estimate for website redesign project",
+          "project_id": 1
+        },
+        {
+          "id": 2,
+          "amount": 22500.0,
+          "status": "accepted",
+          "created_at": "2026-07-31T04:45:58.595160",
+          "title": "Phase 1 Development",
+          "description": "First phase of mobile app development",
+          "project_id": 2
+        }
+      ]
+    },
+    "get_quote": {
+      "status": 200,
+      "endpoint": "/api/quotes/1",
+      "count": 1,
+      "data": {
+        "id": 1,
+        "amount": 15000.0,
+        "status": "pending",
+        "created_at": "2026-07-31T04:45:58.595072",
+        "title": "Initial Project Estimate",
+        "description": "Estimate for website redesign project",
+        "project_id": 1
+      }
+    }
+  },
+  "crew": {
+    "list_crew": {
+      "status": 200,
+      "endpoint": "/api/crew",
+      "count": 3,
+      "data": [
+        {
+          "role": "Project Manager",
+          "name": "Alice Johnson",
+          "phone": "555-0101",
+          "created_at": "2026-07-31T04:45:58.586254",
+          "email": "alice@example.com",
+          "id": 1,
+          "project_id": 1
+        },
+        {
+          "role": "Lead Developer",
+          "name": "Bob Smith",
+          "phone": "555-0102",
+          "created_at": "2026-07-31T04:45:58.586338",
+          "email": "bob@example.com",
+          "id": 2,
+          "project_id": 2
+        },
+        {
+          "role": "UX/UI Designer",
+          "name": "Carol Davis",
+          "phone": "555-0103",
+          "created_at": "2026-07-31T04:45:58.586375",
+          "email": "carol@example.com",
+          "id": 3,
+          "project_id": 1
+        }
+      ]
+    },
+    "get_crew_member": {
+      "status": 200,
+      "endpoint": "/api/crew/1",
+      "count": 1,
+      "data": {
+        "role": "Project Manager",
+        "name": "Alice Johnson",
+        "phone": "555-0101",
+        "created_at": "2026-07-31T04:45:58.586254",
+        "email": "alice@example.com",
+        "id": 1,
+        "project_id": 1
+      }
+    }
+  },
+  "invoices": {
+    "list_invoices": {
+      "status": 200,
+      "endpoint": "/api/invoices",
+      "count": 1,
+      "data": [
+        {
+          "invoice_number": "INV-2026-001",
+          "amount": 15000.0,
+          "due_date": "2026-08-30T04:45:58.599420",
+          "created_at": "2026-07-31T04:45:58.599868",
+          "status": "issued",
+          "id": 1,
+          "project_id": 3
+        }
+      ]
+    },
+    "get_invoice": {
+      "status": 200,
+      "endpoint": "/api/invoices/1",
+      "count": 1,
+      "data": {
+        "invoice_number": "INV-2026-001",
+        "amount": 15000.0,
+        "due_date": "2026-08-30T04:45:58.599420",
+        "created_at": "2026-07-31T04:45:58.599868",
+        "status": "issued",
+        "id": 1,
+        "project_id": 3
+      }
+    }
+  },
+  "users": {
+    "get_user": {
+      "status": 200,
+      "endpoint": "/api/users/1",
+      "count": 1,
+      "data": {
+        "username": "scottyhugs",
+        "email": "scotty@example.com",
+        "hashed_password": "486f0a9839674a9dfcf52efbffe2469b01b87f5e5c967ec8f0ee3b7d9a308a8c",
+        "created_at": "2026-07-31T04:45:58.567920",
+        "full_name": "Scotty Hughes",
+        "id": 1,
+        "is_active": true
+      }
+    }
+  },
+  "ecosystem": {
+    "agents": {
+      "status": 200,
+      "endpoint": "/api/ecosystem/agents",
+      "count": 1,
+      "data": {
+        "agents": [
+          {
+            "id": "d8c9ae2d8eeb",
+            "name": "Competitive",
+            "status": "active",
+            "last_run": "2026-07-29T09:30:00Z"
+          },
+          {
+            "id": "1d07cefe3ee3",
+            "name": "Design",
+            "status": "active",
+            "last_run": "2026-07-29T09:35:00Z"
+          },
+          {
+            "id": "f30696b1e0cf",
+            "name": "SEO",
+            "status": "active",
+            "last_run": "2026-07-29T09:40:00Z"
+          },
+          {
+            "id": "46125c98b0e5",
+            "name": "Product",
+            "status": "active",
+            "last_run": "2026-07-29T09:45:00Z"
+          },
+          {
+            "id": "9ac8148d99f6",
+            "name": "Marketing",
+            "status": "active",
+            "last_run": "2026-07-29T09:50:00Z"
+          },
+          {
+            "id": "7af78288dfe9",
+            "name": "CEO Ops",
+            "status": "active",
+            "last_run": "2026-07-29T09:55:00Z"
+          },
+          {
+            "id": "4d42be876004",
+            "name": "Analytics",
+            "status": "active",
+            "last_run": "2026-07-29T10:00:00Z"
+          }
+        ],
+        "timestamp": "2026-07-31T04:46:03.013858"
+      }
+    },
+    "agents/d8c9ae2d8eeb/logs": {
+      "status": 200,
+      "endpoint": "/api/ecosystem/agents/d8c9ae2d8eeb/logs",
+      "count": 1,
+      "data": {
+        "agent_id": "d8c9ae2d8eeb",
+        "logs": [
+          {
+            "timestamp": "2026-07-29T10:00:00Z",
+            "level": "INFO",
+            "message": "Agent d8c9ae2d8eeb executing task"
+          },
+          {
+            "timestamp": "2026-07-29T10:01:00Z",
+            "level": "INFO",
+            "message": "Task completed successfully"
+          }
+        ]
+      }
+    },
+    "trading/metrics": {
+      "status": 200,
+      "endpoint": "/api/ecosystem/trading/metrics",
+      "count": 1,
+      "data": {
+        "portfolio_value": 125450.75,
+        "cash_available": 25000.0,
+        "positions_count": 8,
+        "daily_pnl": 1245.5,
+        "daily_pnl_percent": 1.01,
+        "monthly_pnl": 8750.25,
+        "monthly_pnl_percent": 7.47,
+        "active_signals": 3,
+        "win_rate": 0.62,
+        "risk_score": 0.35,
+        "last_trade": "2026-07-29T14:32:00Z"
+      }
+    },
+    "trading/positions": {
+      "status": 200,
+      "endpoint": "/api/ecosystem/trading/positions",
+      "count": 1,
+      "data": {
+        "positions": [
+          {
+            "symbol": "NVDA",
+            "quantity": 50,
+            "entry_price": 120.5,
+            "current_price": 132.75,
+            "pnl": 610.0,
+            "pnl_percent": 10.17,
+            "status": "open"
+          },
+          {
+            "symbol": "MSFT",
+            "quantity": 30,
+            "entry_price": 380.0,
+            "current_price": 392.5,
+            "pnl": 375.0,
+            "pnl_percent": 3.29,
+            "status": "open"
+          }
+        ],
+        "count": 2
+      }
+    },
+    "trading/signals": {
+      "status": 200,
+      "endpoint": "/api/ecosystem/trading/signals",
+      "count": 1,
+      "data": {
+        "signals": [
+          {
+            "symbol": "TSLA",
+            "signal": "BUY",
+            "confidence": 0.78,
+            "timestamp": "2026-07-29T14:20:00Z"
+          },
+          {
+            "symbol": "AMD",
+            "signal": "SELL",
+            "confidence": 0.65,
+            "timestamp": "2026-07-29T14:15:00Z"
+          },
+          {
+            "symbol": "AAPL",
+            "signal": "HOLD",
+            "confidence": 0.72,
+            "timestamp": "2026-07-29T14:10:00Z"
+          }
+        ],
+        "count": 3
+      }
+    },
+    "operations/queue": {
+      "status": 200,
+      "endpoint": "/api/ecosystem/operations/queue",
+      "count": 1,
+      "data": {
+        "queue": [
+          {
+            "id": "op_001",
+            "type": "cron",
+            "name": "CEO Briefing",
+            "status": "pending",
+            "scheduled_at": "2026-07-30T06:00:00Z"
+          },
+          {
+            "id": "op_002",
+            "type": "crawl",
+            "name": "Competitive Analysis",
+            "status": "running",
+            "started_at": "2026-07-29T14:30:00Z"
+          },
+          {
+            "id": "op_003",
+            "type": "report",
+            "name": "Weekly Analytics",
+            "status": "completed",
+            "completed_at": "2026-07-29T12:00:00Z"
+          }
+        ],
+        "total": 3
+      }
+    },
+    "notifications": {
+      "status": 200,
+      "endpoint": "/api/ecosystem/notifications",
+      "count": 1,
+      "data": {
+        "notifications": [
+          {
+            "id": "n_001",
+            "type": "error",
+            "title": "Agent Crash",
+            "message": "Competitive agent failed",
+            "timestamp": "2026-07-29T14:25:00Z",
+            "severity": "high"
+          },
+          {
+            "id": "n_002",
+            "type": "success",
+            "title": "Task Complete",
+            "message": "Design briefing published",
+            "timestamp": "2026-07-29T14:10:00Z",
+            "severity": "info"
+          },
+          {
+            "id": "n_003",
+            "type": "warning",
+            "title": "Low Cache",
+            "message": "API rate limit approaching",
+            "timestamp": "2026-07-29T13:50:00Z",
+            "severity": "medium"
+          }
+        ],
+        "total": 3
+      }
+    },
+    "dashboard/summary": {
+      "status": 200,
+      "endpoint": "/api/ecosystem/dashboard/summary",
+      "count": 1,
+      "data": {
+        "business": {
+          "total_projects": 12,
+          "active_projects": 5,
+          "completed_projects": 6,
+          "pending_quotes": 3,
+          "total_revenue": 125000.0,
+          "crew_count": 8
+        },
+        "operations": {
+          "agents_active": 7,
+          "agents_healthy": 6,
+          "agents_error": 1,
+          "pending_operations": 2,
+          "recent_notifications": 5
+        },
+        "trading": {
+          "portfolio_value": 125450.75,
+          "daily_pnl": 1245.5,
+          "daily_pnl_percent": 1.01,
+          "active_positions": 2,
+          "active_signals": 3
+        }
+      }
+    }
+  }
+}

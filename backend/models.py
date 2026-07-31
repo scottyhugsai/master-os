@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Dict, Any
 from datetime import datetime
 
 # Project Schemas
@@ -162,3 +162,30 @@ class UserResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+
+# Receipt/Audit Trail Schemas
+class ReceiptCreate(BaseModel):
+    action_type: str
+    entity_type: str
+    entity_id: int
+    entity_name: Optional[str] = None
+    user_id: int
+    user_name: Optional[str] = None
+    details: Optional[Dict[str, Any]] = None
+
+
+class ReceiptResponse(BaseModel):
+    id: int
+    action_type: str
+    entity_type: str
+    entity_id: int
+    entity_name: Optional[str]
+    user_id: int
+    user_name: Optional[str]
+    timestamp: datetime
+    details: Optional[Dict[str, Any]]
+    
+    class Config:
+        from_attributes = True
+

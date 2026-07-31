@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, Boolean, ForeignKey, Text
+from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, Boolean, ForeignKey, Text, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
@@ -28,7 +28,14 @@ class User(Base):
     full_name = Column(String, nullable=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
+    company_name = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
+    address = Column(String, nullable=True)
+    city = Column(String, nullable=True)
+    state = Column(String, nullable=True)
+    zip_code = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     projects = relationship("Project", back_populates="owner")
 
@@ -40,6 +47,7 @@ class Project(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     description = Column(Text, nullable=True)
+    address = Column(String, nullable=True)
     status = Column(String, default="active")
     budget = Column(Float, nullable=True)
     user_id = Column(Integer, ForeignKey("users.id"))
@@ -64,6 +72,7 @@ class Quote(Base):
     status = Column(String, default="draft")
     project_id = Column(Integer, ForeignKey("projects.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     project = relationship("Project", back_populates="quotes")
 
@@ -79,6 +88,7 @@ class Crew(Base):
     phone = Column(String, nullable=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     project = relationship("Project", back_populates="crew")
 
@@ -93,6 +103,7 @@ class Photo(Base):
     url = Column(String, nullable=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     project = relationship("Project", back_populates="photos")
 
@@ -108,8 +119,24 @@ class Invoice(Base):
     due_date = Column(DateTime, nullable=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     project = relationship("Project", back_populates="invoices")
+
+
+class Receipt(Base):
+    """Audit trail / receipt entry for actions."""
+    __tablename__ = "receipts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    action_type = Column(String, index=True)  # project_created, crew_assigned, quote_sent, etc.
+    entity_type = Column(String, index=True)  # project, crew, quote, invoice, etc.
+    entity_id = Column(Integer, index=True)
+    entity_name = Column(String, nullable=True)
+    user_id = Column(Integer, index=True)
+    user_name = Column(String, nullable=True)
+    timestamp = Column(DateTime, default=datetime.utcnow, index=True)
+    details = Column(JSON, nullable=True)  # Additional metadata as JSON
 
 
 def init_db():

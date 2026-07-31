@@ -1,0 +1,122 @@
+{
+  "user": {
+    "id": 1,
+    "email": "scotty@example.com",
+    "username": "scottyhugs",
+    "full_name": "Scotty Hughes",
+    "is_active": true,
+    "created_at": "2026-07-31T04:45:58.567920"
+  },
+  "projects": [
+    {
+      "id": 1,
+      "name": "Website Redesign",
+      "description": "Complete redesign of company website with modern UI/UX",
+      "status": "active",
+      "budget": 15000.0,
+      "user_id": 1,
+      "created_at": "2026-07-31T04:45:58.575398",
+      "updated_at": "2026-07-31T04:45:58.575413"
+    },
+    {
+      "id": 2,
+      "name": "Mobile App Development",
+      "description": "Native iOS and Android app for customer engagement",
+      "status": "active",
+      "budget": 45000.0,
+      "user_id": 1,
+      "created_at": "2026-07-31T04:45:58.575524",
+      "updated_at": "2026-07-31T04:45:58.575526"
+    },
+    {
+      "id": 3,
+      "name": "E-commerce Platform",
+      "description": "Full-stack e-commerce solution with payment integration",
+      "status": "completed",
+      "budget": 65000.0,
+      "user_id": 1,
+      "created_at": "2026-07-31T04:45:58.575570",
+      "updated_at": "2026-07-31T04:45:58.575571"
+    },
+    {
+      "id": 4,
+      "name": "Cloud Infrastructure",
+      "description": "Migration to cloud and setup of CI/CD pipelines",
+      "status": "completed",
+      "budget": 25000.0,
+      "user_id": 1,
+      "created_at": "2026-07-31T04:45:58.575608",
+      "updated_at": "2026-07-31T04:45:58.575609"
+    },
+    {
+      "id": 5,
+      "name": "API Integration",
+      "description": "Third-party API integrations for data synchronization",
+      "status": "active",
+      "budget": 12000.0,
+      "user_id": 1,
+      "created_at": "2026-07-31T04:45:58.575645",
+      "updated_at": "2026-07-31T04:45:58.575647"
+    }
+  ],
+  "crew": [
+    {
+      "id": 1,
+      "name": "Alice Johnson",
+      "role": "Project Manager",
+      "email": "alice@example.com",
+      "phone": "555-0101",
+      "project_id": 1,
+      "created_at": "2026-07-31T04:45:58.586254"
+    },
+    {
+      "id": 2,
+      "name": "Bob Smith",
+      "role": "Lead Developer",
+      "email": "bob@example.com",
+      "phone": "555-0102",
+      "project_id": 2,
+      "created_at": "2026-07-31T04:45:58.586338"
+    },
+    {
+      "id": 3,
+      "name": "Carol Davis",
+      "role": "UX/UI Designer",
+      "email": "carol@example.com",
+      "phone": "555-0103",
+      "project_id": 1,
+      "created_at": "2026-07-31T04:45:58.586375"
+    }
+  ],
+  "quotes": [
+    {
+      "id": 1,
+      "title": "Initial Project Estimate",
+      "description": "Estimate for website redesign project",
+      "amount": 15000.0,
+      "status": "pending",
+      "project_id": 1,
+      "created_at": "2026-07-31T04:45:58.595072"
+    },
+    {
+      "id": 2,
+      "title": "Phase 1 Development",
+      "description": "First phase of mobile app development",
+      "amount": 22500.0,
+      "status": "accepted",
+      "project_id": 2,
+      "created_at": "2026-07-31T04:45:58.595160"
+    }
+  ],
+  "invoices": [
+    {
+      "id": 1,
+      "invoice_number": "INV-2026-001",
+      "amount": 15000.0,
+      "status": "issued",
+      "due_date": "2026-08-30T04:45:58.599420",
+      "project_id": 3,
+      "created_at": "2026-07-31T04:45:58.599868"
+    }
+  ]
+}
