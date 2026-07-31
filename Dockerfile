@@ -14,5 +14,8 @@ COPY backend/ ./backend/
 # Expose port
 EXPOSE 8000
 
-# Run FastAPI
-CMD ["python", "backend/main.py"]
+# Create non-root user
+RUN useradd -m -u 1000 appuser
+USER appuser
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
