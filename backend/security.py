@@ -4,9 +4,29 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+import os
+
+# Try to load environment variables
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 # Security configuration
-SECRET_KEY = "master-os-secret-key-change-in-production"
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "master-os-secret-key-change-in-production"
+)
+
+# Warn if using default secret key in production
+if SECRET_KEY == "master-os-secret-key-change-in-production":
+    import warnings
+    warnings.warn(
+        "WARNING: Using default SECRET_KEY. Set SECRET_KEY environment variable for production!",
+        category=RuntimeWarning
+    )
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
